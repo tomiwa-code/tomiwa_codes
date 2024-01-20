@@ -1,0 +1,35 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^3.11.0",
+    "@types/js-cookie": "^3.0.5",
+    "framer-motion": "^10.16.4",
+    "next": "latest",
+    "next-sanity": "^5.5.10",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-hover-video-player": "^10.0.1",
+    "react-icons": "^4.11.0",
+    "react-loading-skeleton": "^3.3.1",
+    "sanity": "^3.18.1"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "postcss": "latest",
+    "tailwindcss": "latest",
+    "typescript": "latest"
+  }
+}
