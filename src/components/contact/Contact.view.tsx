@@ -2,6 +2,7 @@
 import { ThemeContext } from "@/context/Theme.Context";
 import emailjs from "@emailjs/browser";
 import { useContext, useEffect, useState } from "react";
+import { usePresence, useAnimate, useInView, motion } from "framer-motion";
 
 const ContactView = () => {
   const [msg, setMsg] = useState({
@@ -19,6 +20,26 @@ const ContactView = () => {
 
   const { storedTheme } = useContext(ThemeContext);
   const { theme } = storedTheme;
+  const [isPresent, safeToRemove] = usePresence();
+  const [scope, animate] = useAnimate();
+  const isInView = useInView(scope);
+
+  const notification = {
+    initial: {
+      opacity: 0,
+      x: 500,
+    },
+    animate: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 150,
+        damping: 8,
+        mass: 0.4,
+      },
+    },
+  };
 
   const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +56,7 @@ const ContactView = () => {
             status: true,
             textColor: "text-lightSecondary",
           });
-          clearForm()
+          clearForm();
         }
       })
       .catch((err) => {
@@ -68,24 +89,47 @@ const ContactView = () => {
     }
   }, [msg?.status]);
 
+  useEffect(() => {
+    if (isPresent) {
+      if (isInView) {
+        const enterAnimation = async () => {
+          await animate("#contactForm", { opacity: 0, x: 50 });
+          await animate(
+            "#contactForm",
+            { x: 0, opacity: 1 },
+            { type: "spring", stiffness: 150, delay: 0.2 }
+          );
+        };
+        enterAnimation();
+      }
+    } else {
+      const exitAnimation = async () => {
+        await animate("#contactForm", { opacity: 0, x: 50 });
+        safeToRemove();
+      };
+      exitAnimation();
+    }
+  }, [isPresent, isInView]);
+
   return (
     <>
-      {msg.status && (
-        <div
-          onClick={() =>
-            setMsg((prev) => ({
-              ...prev,
-              status: false,
-            }))
-          }
-          className={`${msg.color} w-80 px-5 py-4 cursor-pointer rounded absolute right-10 top-10 z-50`}
-        >
-          <p className={`text-sm ${msg.textColor} font-medium`}>{msg.text}</p>
-        </div>
-      )}
-      <div className={` pb-12 md:pb-0`}>
+      <motion.div
+        variants={notification}
+        initial={"initial"}
+        animate={msg.status ? "animate" : ""}
+        onClick={() =>
+          setMsg((prev) => ({
+            ...prev,
+            status: false,
+          }))
+        }
+        className={`${msg.color} w-80 px-5 py-4 cursor-pointer rounded absolute right-10 top-10 z-50`}
+      >
+        <p className={`text-sm ${msg.textColor} font-medium`}>{msg.text}</p>
+      </motion.div>
+      <div ref={scope} className={` pb-12 md:pb-0`}>
         <form
-          className="w-8/12 lg:w-5/12 mx-auto"
+          className="w-8/12 lg:w-5/12 mx-auto opacity-0"
           onSubmit={formSubmit}
           id="contactForm"
         >

@@ -1,5 +1,10 @@
 import ContactView from "@/components/contact/Contact.view";
 import TopTitle from "@/components/general/TopTitle";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'About',
+}
 
 const Contact = () => {
   return (

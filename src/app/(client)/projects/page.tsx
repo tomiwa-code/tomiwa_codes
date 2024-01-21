@@ -22,7 +22,7 @@ const Projects = () => {
       </Suspense>
 
       <p className="text-xs text-gray-400 pb-12 md:pb-20 text-center w-2/4 mx-auto">
-        Let me handle your projects and you'll be amazed.
+        Let me handle your projects and you&apos;ll be amazed.
       </p>
     </>
   );

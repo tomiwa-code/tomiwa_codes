@@ -1,11 +1,12 @@
 "use client";
 import { ThemeContext } from "@/context/Theme.Context";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { BsPhone } from "react-icons/bs";
 import { FaEnvelope } from "react-icons/fa";
 import { BsWhatsapp } from "react-icons/bs";
 import { ProfileType, SkillsType } from "@/types/types";
 import Image from "next/image";
+import { usePresence, useAnimate, useInView } from "framer-motion";
 
 const AboutView = (props: {
   profileData: ProfileType[];
@@ -13,6 +14,9 @@ const AboutView = (props: {
 }) => {
   const { storedTheme } = useContext(ThemeContext);
   const { theme } = storedTheme;
+  const [isPresent, safeToRemove] = usePresence();
+  const [scope, animate] = useAnimate();
+  const isInView = useInView(scope);
 
   const { bottomText, shortBio, contacts, profileImage } = props.profileData[0];
   // Separate into categories
@@ -26,14 +30,37 @@ const AboutView = (props: {
     (skill) => skill.category === "design"
   );
 
+  useEffect(() => {
+    if (isPresent) {
+      if (isInView) {
+        const enterAnimation = async () => {
+          await animate("#slideIn", { opacity: 0, x: 50 });
+          await animate(
+            "#slideIn",
+            { x: 0, opacity: 1 },
+            { type: "spring", stiffness: 150, delay: 0.2 }
+          );
+        };
+        enterAnimation();
+      }
+    } else {
+      const exitAnimation = async () => {
+        await animate("#slideIn", { opacity: 0, x: 50 });
+        safeToRemove();
+      };
+      exitAnimation();
+    }
+  }, [isPresent, isInView]);
+
   return (
-    <div className={`pb-12 md:pb-0`}>
+    <div ref={scope} className={`pb-12 md:pb-0`}>
       <div className="w-full block lg:flex lg:justify-center lg:space-x-12">
         <div
+          id="slideIn"
           className={`
             ${
               theme === "dark" ? "bg-lightSecondary" : "bg-white"
-            }  w-8/12 mx-auto lg:mx-0 lg:w-5/12 md:h-80 overflow-hidden rounded-lg block md:flex items-center`}
+            } opacity-0 w-8/12 mx-auto lg:mx-0 lg:w-5/12 md:h-80 overflow-hidden rounded-lg block md:flex items-center`}
         >
           <div className="bg-primary w-32 h-32 rounded-full md:rounded-none mx-auto md:mx-0 md:w-2/5 md:h-full overflow-hidden md:overflow-visible mt-6 md:mt-0">
             <Image
@@ -88,9 +115,10 @@ const AboutView = (props: {
           </div>
         </div>
         <div
+          id="slideIn"
           className={`${
             theme === "dark" ? "bg-lightSecondary" : "bg-white"
-          } w-8/12 mx-auto lg:mx-0 lg:w-4/12 py-4 overflow-hidden rounded-lg mt-12 lg:mt-0`}
+          } w-8/12 opacity-0 mx-auto lg:mx-0 lg:w-4/12 py-4 overflow-hidden rounded-lg mt-12 lg:mt-0`}
         >
           <h3 className="uppercase text-darkGrey text-lg text-center font-medium mb-3">
             skills

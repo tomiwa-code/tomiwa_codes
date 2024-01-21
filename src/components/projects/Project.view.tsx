@@ -1,35 +1,58 @@
 "use client";
 import { ThemeContext } from "@/context/Theme.Context";
 import { ProjectType } from "@/types/types";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
+import { usePresence, useAnimate, useInView } from "framer-motion";
+import Image from "next/image";
 
 const ProjectView = (props: { projectData: ProjectType[] }) => {
   const { storedTheme } = useContext(ThemeContext);
   const { theme } = storedTheme;
 
+  const [isPresent, safeToRemove] = usePresence();
+  const [scope, animate] = useAnimate();
+  const isInView = useInView(scope);
+
+  useEffect(() => {
+    if (isPresent) {
+      if (isInView) {
+        const enterAnimation = async () => {
+          await animate("#card", { opacity: 0, x: 50 });
+          await animate(
+            "#card",
+            { x: 0, opacity: 1 },
+            { type: "spring", stiffness: 150, delay: 0.2 }
+          );
+        };
+        enterAnimation();
+      }
+    } else {
+      const exitAnimation = async () => {
+        await animate("#card", { opacity: 0, x: 50 });
+        safeToRemove();
+      };
+      exitAnimation();
+    }
+  }, [isPresent, isInView]);
+
   return (
-    <div className="grid md:grid-cols-2 w-full md:w-9/12 lg:w-2/4 gap-y-12 md:gap-x-10 md:gap-y-14 lg:gap-16 mx-auto mb-20">
+    <div
+      ref={scope}
+      className="grid md:grid-cols-2 w-full md:w-9/12 lg:w-2/4 gap-y-12 md:gap-x-10 md:gap-y-14 lg:gap-16 mx-auto mb-20"
+    >
       {props.projectData &&
         props.projectData.map(
           (
-            {
-              _id,
-              name,
-              utilities,
-              projectimage,
-              projectvideo,
-              links,
-              contribution,
-              slug,
-            },
+            { _id, name, utilities, projectimage, projectvideo, links },
             index
           ) => {
             return (
               <div
+                id="card"
                 className={`w-60 md:w-64 lg:w-[295px] ${
                   theme === "dark" ? "bg-lightSecondary" : "bg-white"
-                }  text-lightSecondary rounded-xl overflow-hidden mx-auto`}
+                } opacity-0 text-lightSecondary rounded-xl overflow-hidden mx-auto`}
                 key={_id || index}
               >
                 <div className="w-full h-36 md:h-40 lg:h-44 overflow-hidden cursor-pointer">
@@ -39,7 +62,10 @@ const ProjectView = (props: { projectData: ProjectType[] }) => {
                     }}
                     videoSrc={projectvideo}
                     pausedOverlay={
-                      <img
+                      <Image
+                        width={1000}
+                        height={1000}
+                        priority
                         src={projectimage}
                         alt="cover"
                         style={{
