@@ -12,7 +12,7 @@ export type ProjectType = {
   projectimage: string;
   projectvideo: string;
   links: { github: string; site: string };
-  contribution: string;
+  contribution: [];
 };
 
 export type HeroType = {

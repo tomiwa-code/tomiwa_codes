@@ -1,60 +1,106 @@
 "use client";
 import { ThemeContext } from "@/context/Theme.Context";
 import { ProjectType } from "@/types/types";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
-import { usePresence, useAnimate, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { BsFillPeopleFill } from "react-icons/bs";
+import Link from "next/link";
 
 const ProjectView = (props: { projectData: ProjectType[] }) => {
   const { storedTheme } = useContext(ThemeContext);
   const { theme } = storedTheme;
+  const [showContributors, setShowContributors] = useState(false);
+  const [isTooltipVisible, setTooltipVisible] = useState(false);
 
-  const [isPresent, safeToRemove] = usePresence();
-  const [scope, animate] = useAnimate();
-  const isInView = useInView(scope);
+  const showTooltip = () => {
+    setTooltipVisible(true);
+  };
 
-  useEffect(() => {
-    if (isPresent) {
-      if (isInView) {
-        const enterAnimation = async () => {
-          await animate("#card", { opacity: 0, x: 50 });
-          await animate(
-            "#card",
-            { x: 0, opacity: 1 },
-            { type: "spring", stiffness: 150, delay: 0.2 }
-          );
-        };
-        enterAnimation();
-      }
-    } else {
-      const exitAnimation = async () => {
-        await animate("#card", { opacity: 0, x: 50 });
-        safeToRemove();
-      };
-      exitAnimation();
-    }
-  }, [isPresent, isInView]);
+  const hideTooltip = () => {
+    setTooltipVisible(false);
+  };
+
+  const toggleContributors = () => {
+    setShowContributors((prev) => !prev);
+  };
+
+  const slideIn = {
+    initial: {
+      opacity: 0,
+      x: 50,
+    },
+    animate: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 150,
+      },
+    },
+  };
 
   return (
-    <div
-      ref={scope}
-      className="grid md:grid-cols-2 w-full md:w-9/12 lg:w-2/4 gap-y-12 md:gap-x-10 md:gap-y-14 lg:gap-16 mx-auto mb-20"
-    >
+    <div className="grid md:grid-cols-2 w-full md:w-9/12 lg:w-2/4 gap-y-12 md:gap-x-10 md:gap-y-14 lg:gap-16 mx-auto mb-20">
       {props.projectData &&
         props.projectData.map(
           (
-            { _id, name, utilities, projectimage, projectvideo, links },
+            {
+              _id,
+              name,
+              utilities,
+              projectimage,
+              projectvideo,
+              links,
+              contribution,
+            },
             index
           ) => {
             return (
-              <div
-                id="card"
+              <motion.div
+                variants={slideIn}
+                initial="initial"
+                whileInView="animate"
+                viewport={{ once: true, amount: 0.5 }}
                 className={`w-60 md:w-64 lg:w-[295px] ${
                   theme === "dark" ? "bg-lightSecondary" : "bg-white"
-                } opacity-0 text-lightSecondary rounded-xl overflow-hidden mx-auto`}
+                } opacity-0 text-lightSecondary rounded-xl overflow-hidden mx-auto relative`}
                 key={_id || index}
               >
+                {contribution && (
+                  <div className="relative flex gap-x-2">
+                    {showContributors && (
+                      <div className="left-6 top-5 w-[230px] py-1 px-2 break-words space-y-2 absolute z-20 rounded-tl rounded-bl rounded-br bg-lightSecondary text-darkSecondary">
+                        <h3 className="text-sm text-center underline font-semibold">
+                          {contribution?.length > 1
+                            ? "Contributors"
+                            : "Contributor"}
+                        </h3>
+                        {contribution?.map((items, index) => (
+                          <div key={index} className="text-sm">
+                            <Link href={items}>{items}</Link>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div
+                      className="w-8 h-8 rounded-full cursor-pointer text-darkSecondary text-base md:text-lg bg-lightSecondary flex z-20 absolute right-2 top-2 justify-center items-center"
+                      onClick={toggleContributors}
+                      onMouseOver={showTooltip}
+                      onMouseOut={hideTooltip}
+                    >
+                      <BsFillPeopleFill />
+                    </div>
+                    <div
+                      className="absolute z-10 top-10 right-5 bg-light-500 text-white rounded text-xs p-2"
+                      style={{ display: isTooltipVisible ? "block" : "none" }}
+                    >
+                      Contributors
+                    </div>
+                  </div>
+                )}
+
                 <div className="w-full h-36 md:h-40 lg:h-44 overflow-hidden cursor-pointer">
                   <HoverVideoPlayer
                     style={{
@@ -121,7 +167,7 @@ const ProjectView = (props: { projectData: ProjectType[] }) => {
                     </a>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           }
         )}
