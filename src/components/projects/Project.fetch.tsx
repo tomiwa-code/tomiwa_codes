@@ -3,9 +3,9 @@ import { getProjects } from "../../../sanity/sanity.query";
 import ProjectView from "./Project.view";
 
 const ProjectFetch = async () => {
-  const profile: ProjectType[] = await getProjects();
+  const projects: ProjectType[] = await getProjects();
 
-  return <ProjectView projectData={profile} />;
+  return <ProjectView projectData={projects} />;
 };
 
 export default ProjectFetch;

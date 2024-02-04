@@ -4,10 +4,10 @@ const config: ClientConfig = {
   projectId: "tpr1dl0v",
   dataset: "production",
   apiVersion: "2023-10-31",
-  useCdn: false,
+  useCdn: false
 };
 
-const client = createClient(config);
+export const client = createClient(config);
 
 export const urlForPDF = (pdfReference: {
   _type: string;
@@ -26,4 +26,3 @@ export const urlForPDF = (pdfReference: {
   return "#";
 };
 
-export default client;

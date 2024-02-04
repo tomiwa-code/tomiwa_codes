@@ -1,5 +1,5 @@
 import { groq } from "next-sanity";
-import client from "./sanity.client";
+import { client } from "./sanity.client";
 
 export async function getProfile() {
   return client.fetch(
@@ -12,14 +12,14 @@ export async function getProfile() {
       fullBio,
       contacts,
       socialLinks,
-    }`
+    }`,
+    { next: { revalidate: 60 } }
   );
 }
 
 export async function getProjects() {
-  return client
-    .fetch(
-      groq`*[_type == "project"]{
+  return client.fetch(
+    groq`*[_type == "project"]{
       _id,
       name,
       slug,
@@ -28,16 +28,17 @@ export async function getProjects() {
       projectvideo,
       links,
       contribution,
-    }`
-    )
-    .catch((err) => console.log(err));
+    }`,
+    { next: { revalidate: 60 } }
+  );
 }
 
 export async function getSocialLinks() {
   return client.fetch(
     groq`*[_type == "profile"]{
       socialLinks,
-    }`
+    }`,
+    { next: { revalidate: 60 } }
   );
 }
 
@@ -51,7 +52,8 @@ export async function getHero() {
       heroText2,
       resumeURL,
       secondText
-    }`
+    }`,
+    { next: { revalidate: 60 } }
   );
 }
 
@@ -62,6 +64,7 @@ export async function getSkills() {
       category,
       subgroup,
       title,
-    }`
+    }`,
+    { next: { revalidate: 60 } }
   );
 }
