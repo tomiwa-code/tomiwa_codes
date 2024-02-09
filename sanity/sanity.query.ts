@@ -13,7 +13,6 @@ export async function getProfile() {
       contacts,
       socialLinks,
     }`,
-    { next: { revalidate: 60 } }
   );
 }
 
@@ -29,7 +28,6 @@ export async function getProjects() {
       links,
       contribution,
     }`,
-    { next: { revalidate: 60 } }
   );
 }
 
@@ -38,7 +36,6 @@ export async function getSocialLinks() {
     groq`*[_type == "profile"]{
       socialLinks,
     }`,
-    { next: { revalidate: 60 } }
   );
 }
 
@@ -53,7 +50,6 @@ export async function getHero() {
       resumeURL,
       secondText
     }`,
-    { next: { revalidate: 60 } }
   );
 }
 
@@ -65,6 +61,5 @@ export async function getSkills() {
       subgroup,
       title,
     }`,
-    { next: { revalidate: 60 } }
   );
 }

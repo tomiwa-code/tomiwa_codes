@@ -1,12 +1,14 @@
 import React, { Suspense } from "react";
 import TopTitle from "@/components/general/TopTitle";
 import ProjectFetch from "@/components/projects/Project.fetch";
-import { Metadata } from 'next'
+import { Metadata } from "next";
 import Loading from "@/components/projects/Loading.fetch";
- 
+
 export const metadata: Metadata = {
-  title: 'Projects',
-}
+  title: "Projects",
+};
+
+export const dynamic = "force-dynamic";
 
 const Projects = () => {
   return (
