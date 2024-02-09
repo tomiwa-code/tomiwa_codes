@@ -4,53 +4,64 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  description: "Tomiwa.codes portfolio | Home",
-  title: "Home | Tomiwa.codes",
-  // generator: "Next.js",
-  // applicationName: "Next.js",
-  // referrer: "origin-when-cross-origin",
-  // keywords: [
-  //   "Tomiwa.codes",
-  //   "Tomiwa",
-  //   "Ogunbase",
-  //   "Ayoola",
-  //   "Adetomiwa",
-  //   "Trending portfolio",
-  //   "Web developer portfolio",
-  //   "portfolio",
-  //   "portfolio inspiration",
-  // ],
-  // authors: [
-  //   { name: "Tomiwa" },
-  //   { name: "Tomiwa", url: "https://tomiwa-codes.vercel.app" },
-  // ],
-  // creator: "Tomiwa ogunbase",
-  // formatDetection: {
-  //   email: false,
-  //   address: false,
-  //   telephone: false,
-  // },
-  // openGraph: {
-  //   title: "Next.js",
-  //   description: "The React Framework for the Web",
-  //   url: "https://nextjs.org",
-  //   siteName: "Next.js",
-  //   images: [
-  //     {
-  //       url: "https://nextjs.org/og.png",
-  //       width: 800,
-  //       height: 600,
-  //     },
-  //     {
-  //       url: "https://nextjs.org/og-alt.png",
-  //       width: 1800,
-  //       height: 1600,
-  //       alt: "My custom alt",
-  //     },
-  //   ],
-  //   locale: "en_US",
-  //   type: "website",
-  // },
+  metadataBase: new URL("https://tomiwa-codes.vercel.app"),
+  description: "Tomiwa-codes portfolio | Home",
+  title: "Home | Tomiwa-codes",
+  referrer: "origin-when-cross-origin",
+  keywords: [
+    "Tomiwa-codes",
+    "Tomiwa",
+    "Ogunbase",
+    "Ayoola",
+    "Adetomiwa",
+    "tomiwa code homepage",
+    "Trending portfolio",
+    "Web developer portfolio",
+    "portfolio",
+    "portfolio inspiration",
+    "Portfolio website",
+  ],
+  authors: [
+    { name: "Tomiwa" },
+    { name: "Tomiwa", url: "https://tomiwa-codes.vercel.app/about" },
+  ],
+  creator: "Tomiwa Ogunbase",
+  twitter: {
+    images: [
+      {
+        url: "https://res.cloudinary.com/dgdoymhtj/image/upload/v1679864150/my-portfolio/my-portfolio_xtjnnj.png",
+        alt: "image of the homepage",
+      },
+    ],
+    card: "summary_large_image",
+    title: "Tomiwa-codes",
+    description: "Tomiwa-codes portfolio | Home",
+    creator: "Tomiwa Ogunbase",
+  },
+  openGraph: {
+    title: "Tomiwa-codes",
+    description: "Tomiwa-codes portfolio | Home",
+    url: "https://tomiwa-codes.vercel.app",
+    siteName: "Tomiwa-codes",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dgdoymhtj/image/upload/v1679864150/my-portfolio/my-portfolio_xtjnnj.png",
+        alt: "image of the homepage",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+    },
+  },
 };
 
 export const dynamic = "force-dynamic";
