@@ -11,19 +11,17 @@ import Link from "next/link";
 const ProjectView = (props: { projectData: ProjectType[] }) => {
   const { storedTheme } = useContext(ThemeContext);
   const { theme } = storedTheme;
-  const [showContributors, setShowContributors] = useState(false);
-  const [isTooltipVisible, setTooltipVisible] = useState(false);
+  const [currentHoverToolTip, setCurrentHoverToolTip] = useState<string>("");
+  const [contributorActive, setContributorActive] = useState<boolean>(false)
 
-  const showTooltip = () => {
-    setTooltipVisible(true);
-  };
-
-  const hideTooltip = () => {
-    setTooltipVisible(false);
-  };
-
-  const toggleContributors = () => {
-    setShowContributors((prev) => !prev);
+  const showContributor = (toolTipId: string) => {
+    if (contributorActive && currentHoverToolTip === toolTipId) {
+      setContributorActive(false)
+      setCurrentHoverToolTip("")
+      return 
+    }
+    setCurrentHoverToolTip(toolTipId);
+    setContributorActive(true)
   };
 
   const slideIn = {
@@ -70,7 +68,7 @@ const ProjectView = (props: { projectData: ProjectType[] }) => {
               >
                 {contribution && (
                   <div className="relative flex gap-x-2">
-                    {showContributors && (
+                    {currentHoverToolTip === _id && (
                       <div className="left-6 top-5 w-[230px] py-1 px-2 break-words space-y-2 absolute z-20 rounded-tl rounded-bl rounded-br bg-lightSecondary text-darkSecondary">
                         <h3 className="text-sm text-center underline font-semibold">
                           {contribution?.length > 1
@@ -86,51 +84,44 @@ const ProjectView = (props: { projectData: ProjectType[] }) => {
                     )}
                     <div
                       className="w-8 h-8 rounded-full cursor-pointer text-darkSecondary text-base md:text-lg bg-lightSecondary flex z-20 absolute right-2 top-2 justify-center items-center"
-                      onClick={toggleContributors}
-                      onMouseOver={showTooltip}
-                      onMouseOut={hideTooltip}
+                      onClick={() => showContributor(_id)}
                     >
                       <BsFillPeopleFill />
-                    </div>
-                    <div
-                      className="absolute z-10 top-10 right-5 bg-light-500 text-white rounded text-xs p-2"
-                      style={{ display: isTooltipVisible ? "block" : "none" }}
-                    >
-                      Contributors
                     </div>
                   </div>
                 )}
 
-                <div className="w-full h-36 md:h-40 lg:h-44 overflow-hidden cursor-pointer">
-                  <HoverVideoPlayer
-                    style={{
-                      height: "101%",
-                    }}
-                    videoSrc={projectvideo}
-                    pausedOverlay={
-                      <Image
-                        width={1000}
-                        height={1000}
-                        priority
-                        src={projectimage}
-                        alt="cover"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    }
-                    loadingOverlay={
-                      <div className="loading-overlay">
-                        <div className="loading-spinner" />
-                      </div>
-                    }
-                    unloadVideoOnPaused={true}
-                    disablePictureInPicture
-                    playbackStartDelay={500}
-                  />
-                </div>
+                  <div className="w-full h-36 md:h-40 lg:h-44 overflow-hidden cursor-pointer">
+                    <HoverVideoPlayer
+                      style={{
+                        height: "101%",
+                      }}
+                      videoSrc={projectvideo}
+                      pausedOverlay={
+                        <Image
+                          width={1000}
+                          height={1000}
+                          priority
+                          src={projectimage}
+                          alt="cover"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      }
+                      loadingOverlay={
+                        <div className="loading-overlay">
+                          <div className="loading-spinner" />
+                        </div>
+                      }
+                      unloadVideoOnPaused={true}
+                      disablePictureInPicture
+                      playbackStartDelay={500}
+                    />
+                  </div>
+
                 <div className="pt-3 pb-5 px-3 md:px-6">
                   <h3
                     className={`capitalize ${
@@ -142,7 +133,7 @@ const ProjectView = (props: { projectData: ProjectType[] }) => {
                   <p className="text-gray-400 text-xs md:text-sm text-center mt-2">
                     {utilities}
                   </p>
-                  <div className="flex justify-evenly md:justify-between items-center mt-5">
+                  <div className="flex justify-center gap-x-3 items-center mt-5">
                     <a
                       href={links.site}
                       target="_blank"
@@ -153,18 +144,20 @@ const ProjectView = (props: { projectData: ProjectType[] }) => {
                     >
                       View site
                     </a>
-                    <a
-                      href={links.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={`block ${
-                        theme === "dark"
-                          ? "border-darkSecondary text-darkSecondary"
-                          : "border-light-500 text-light-500"
-                      } border font-medium text-sm  rounded w-24 lg:w-28 h-10 leading-10 text-center`}
-                    >
-                      View code
-                    </a>
+                    {links.github !== "https://null" && (
+                      <a
+                        href={links.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`block ${
+                          theme === "dark"
+                            ? "border-darkSecondary text-darkSecondary"
+                            : "border-light-500 text-light-500"
+                        } border font-medium text-sm  rounded w-24 lg:w-28 h-10 leading-10 text-center`}
+                      >
+                        View code
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>

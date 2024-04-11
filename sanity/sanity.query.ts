@@ -18,7 +18,7 @@ export async function getProfile() {
 
 export async function getProjects() {
   return client.fetch(
-    groq`*[_type == "project"]{
+    groq`*[_type == "project"] | order(_createdAt desc) {
       _id,
       name,
       slug,
@@ -30,6 +30,7 @@ export async function getProjects() {
     }`,
   );
 }
+
 
 export async function getSocialLinks() {
   return client.fetch(
